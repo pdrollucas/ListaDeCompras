@@ -1,2 +1,2 @@
 # ListaDeCompras
-Sistema Web para gerenciamento de lista de compras
+Sistema Web Mobile para gerenciamento de lista de compras
