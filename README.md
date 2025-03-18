@@ -41,12 +41,6 @@ Sistema Web Mobile para gerenciamento de lista de compras.
 - O usuário deve poder remover um item de uma lista.
 - O usuário deve poder visualizar todos os itens de uma lista de compras específica.
 
-## Salvamento de Dados
-- O sistema deve salvar automaticamente as listas e seus itens para que o usuário possa acessá-los posteriormente.
-
-## Responsividade e Acessibilidade
-- O sistema deve ser responsivo, garantindo uma boa experiência em dispositivos móveis.
-
 # Requisitos Não Funcionais
 
 ## Usabilidade
@@ -66,3 +60,11 @@ Sistema Web Mobile para gerenciamento de lista de compras.
 ## Compatibilidade
 - O sistema deve funcionar corretamente nos principais navegadores modernos (Chrome, Firefox, Edge, Safari).
 - O sistema deve ser otimizado para diferentes tamanhos de tela de smartphones.
+- O sistema não deve funcionar em telas maiores do que as de smartphones
+
+## Responsividade e Acessibilidade
+- O sistema deve ser responsivo, garantindo uma boa experiência em dispositivos móveis.
+
+## Salvamento de Dados
+- O sistema deve salvar automaticamente as listas e seus itens para que o usuário possa acessá-los posteriormente.
+
