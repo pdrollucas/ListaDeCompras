@@ -1,6 +1,6 @@
 # ListaDeCompras
 
-**Alunos**: Eduardo Correa e Pedro Lucas Luckow
+**Alunos**: Eduardo Correa, Eduardo Fritz e Pedro Lucas Luckow
 
 ## Descrição
 
@@ -67,4 +67,8 @@ Sistema Web Mobile para gerenciamento de lista de compras.
 
 ## Salvamento de Dados
 - O sistema deve salvar automaticamente as listas e seus itens para que o usuário possa acessá-los posteriormente.
+
+# Arquivo documentação
+
+[pac-n1-gerenciador-de-listas.pdf](https://github.com/user-attachments/files/19513469/pac-n1-gerenciador-de-listas.pdf)
 
