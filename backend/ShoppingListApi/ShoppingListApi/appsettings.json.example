@@ -1,0 +1,15 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=dbname;User=username;Password=yourpassword;"
+  },
+  "Jwt": {
+    "Key": "your-jwt-secret-key-here"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
