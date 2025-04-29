@@ -1,14 +1,9 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <RouterView />
   <header>
     <div>
       <div class="about">
-        <img src="../assets/imgs/Cart.svg" alt="Logo">
-        <h2>Gerenciador de Listas</h2>
+        <LogoInicio/>
       </div>
       <nav class="btns">
         <RouterLink to="/login" class="mr-2 btn btn-1">Entrar</RouterLink>
@@ -18,37 +13,28 @@ import { RouterLink, RouterView } from 'vue-router'
   </header>
 </template>
 
+<script setup>
+  import LogoInicio from '@/components/LogoInicio.vue';
+  import { RouterLink, RouterView } from 'vue-router'
+</script>
+
 <style scoped>
-* {
-  font-family: "Roboto", sans-serif !important;
-}
-
-img {
-  height: 25vh;
-}
-
 .about {
-  height: 75vh;
+  height: 75dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-h2 {
-  font-size: 18px;
-  font-family: "Roboto", sans-serif !important;
-}
-
 .btns {
   bottom: 0;
   position: absolute;
-  padding-bottom: 10vh;
+  padding-bottom: 10dvh;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
-  font-family: "Roboto", sans-serif !important;
 }
 
 .btn {
