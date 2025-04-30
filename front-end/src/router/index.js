@@ -24,6 +24,11 @@ const router = createRouter({
       name: 'homePrincipal',
       component: () => import('../views/FluxoPrincipal/HomePrincipal.vue'),
     },
+    {
+      path: '/lista',
+      name: 'lista',
+      component: () => import('../views/FluxoPrincipal/ListaPrincipal.vue'),
+    },
   ],
 })
 

@@ -36,9 +36,4 @@
   justify-content: center;
   flex-direction: column;
 }
-
-.input {
-  width: 75vw;
-  font-size: 16px;
-}
 </style>

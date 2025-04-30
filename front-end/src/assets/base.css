@@ -7,12 +7,22 @@
   font-family: "Roboto", sans-serif !important;
 }
 
+input:focus {
+  outline: none;
+  border: none;
+}
+
 .device {
   height: 100dvh;
   width: 100dvw;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.input {
+  width: 75vw !important;
+  font-size: 16px !important;
 }
 
 .btnInicial {
