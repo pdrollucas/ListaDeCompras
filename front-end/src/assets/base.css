@@ -4,4 +4,33 @@
   vertical-align:baseline;
   list-style:none;
   border:0;
-  }
+  font-family: "Roboto", sans-serif !important;
+}
+
+input:focus {
+  outline: none;
+  border: none;
+}
+
+.device {
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input {
+  width: 75vw !important;
+  font-size: 16px !important;
+}
+
+.btnInicial {
+  width: 75vw;
+  background-color: #0E8AFF !important;
+  color: white !important;
+}
+
+.textoLink {
+  color: #0E8AFF !important;
+}
