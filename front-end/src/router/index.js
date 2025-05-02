@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/TelasIniciais/HomeInicial.vue'
+import { isAuthenticated } from '@/services/auth.js';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,13 +24,23 @@ const router = createRouter({
       path: '/home',
       name: 'homePrincipal',
       component: () => import('../views/FluxoPrincipal/HomePrincipal.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/lista',
       name: 'lista',
       component: () => import('../views/FluxoPrincipal/ListaPrincipal.vue'),
+      meta: { requiresAuth: true }
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    next({ path: '/login' });
+  } else {
+    next();
+  }
+});
 
 export default router

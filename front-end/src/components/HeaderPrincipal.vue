@@ -10,12 +10,15 @@
 </template>
 
 <script>
+import { logout } from '@/services/auth.js';
+
 export default {
     props: {
         telaHome: { type: Boolean, default: false }
     },
     methods: {
         logout () {
+            logout()
             this.$router.push('/')
         },
         goHome () {

@@ -2,10 +2,10 @@
   <div class="about">
     <LogoInicio/>
     <v-form>
-      <v-text-field label="Email" class="input mt-8"></v-text-field>
-      <v-text-field label="Usuário" class="input"></v-text-field>
-      <v-text-field label="Senha" class="input" type="password"></v-text-field>
-      <v-text-field label="Confirmar senha" class="input" type="password"></v-text-field>
+      <v-text-field v-model="email" label="Email" class="input mt-8"></v-text-field>
+      <v-text-field v-model="nomeUsuario" label="Usuário" class="input"></v-text-field>
+      <v-text-field v-model="senha" label="Senha" class="input" type="password"></v-text-field>
+      <v-text-field v-model="confirmarSenha" label="Confirmar senha" class="input" type="password"></v-text-field>
     </v-form>
     <v-btn class="btnInicial mt-8" @click="cadastrar()">Cadastrar</v-btn>
     <p class="mt-4">Já possui uma conta? <RouterLink to="/login" class="ml-2 textoLink">Entre</RouterLink> </p>
@@ -14,15 +14,30 @@
 
 <script>
   import LogoInicio from '@/components/LogoInicio.vue';
+  import { register } from '@/services/auth.js';
 
   export default {
-    components: {
-      LogoInicio
+    components: { LogoInicio },
+    data() {
+      return {
+        email: '',
+        nomeUsuario: '',
+        senha: '',
+        confirmarSenha: ''
+      }
     },
-
     methods: {
-      cadastrar () {
-        this.$router.push('/home')
+      async cadastrar () {
+        if (this.senha !== this.confirmarSenha) {
+          alert('As senhas não coincidem!');
+          return;
+        }
+        try {
+          await register(this.email, this.senha, this.nomeUsuario);
+          this.$router.push('/home');
+        } catch (err) {
+          alert('Erro ao cadastrar: ' + err.message);
+        }
       }
     }
   }
