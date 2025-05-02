@@ -1,6 +1,6 @@
 <template>
     <div class="w-100 d-flex justify-content-between align-items-center mb-10" v-if="telaHome">
-        <span>Usuário</span>
+        <span>{{ model.usuario }}</span>
         <span @click="logout()" class="textoLink">Sair</span>
     </div>
     <div class="w-100 d-flex justify-content-between align-items-center mb-10" v-else>
@@ -11,14 +11,22 @@
 
 <script>
 import { logout } from '@/services/auth.js';
+import { useUserStore } from '@/stores/user.js'
 
 export default {
     props: {
         telaHome: { type: Boolean, default: false }
     },
+    computed: {
+        model () {
+            return useUserStore()
+        }
+    },
     methods: {
         logout () {
             logout()
+            const userStore = useUserStore()
+            userStore.clearUser()
             this.$router.push('/')
         },
         goHome () {

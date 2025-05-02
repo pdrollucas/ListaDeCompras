@@ -28,7 +28,13 @@ const router = createRouter({
     },
     {
       path: '/lista',
-      name: 'lista',
+      name: 'listaCriar',
+      component: () => import('../views/FluxoPrincipal/ListaPrincipal.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/lista/:id',
+      name: 'listaEditar',
       component: () => import('../views/FluxoPrincipal/ListaPrincipal.vue'),
       meta: { requiresAuth: true }
     },

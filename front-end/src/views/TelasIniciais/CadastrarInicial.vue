@@ -15,6 +15,7 @@
 <script>
   import LogoInicio from '@/components/LogoInicio.vue';
   import { register } from '@/services/auth.js';
+  import { useUserStore } from '@/stores/user'
 
   export default {
     components: { LogoInicio },
@@ -34,6 +35,8 @@
         }
         try {
           await register(this.email, this.senha, this.nomeUsuario);
+          const userStore = useUserStore()
+          userStore.setToken(localStorage.getItem('token'))
           this.$router.push('/home');
         } catch (err) {
           alert('Erro ao cadastrar: ' + err.message);

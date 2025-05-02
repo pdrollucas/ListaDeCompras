@@ -13,6 +13,7 @@
 <script>
   import LogoInicio from '@/components/LogoInicio.vue';
   import { login } from '@/services/auth.js';
+  import { useUserStore } from '@/stores/user'
 
   export default {
     components: { LogoInicio },
@@ -25,10 +26,12 @@
     methods: {
       async logar () {
         try {
-          await login(this.email, this.senha);
-          this.$router.push('/home');
+          await login(this.email, this.senha)
+          const userStore = useUserStore()
+          userStore.setToken(localStorage.getItem('token'))
+          this.$router.push('/home')
         } catch (err) {
-          alert('Erro ao fazer login: ' + err.message);
+          alert('Erro ao fazer login: ' + err.message)
         }
       }
     }
