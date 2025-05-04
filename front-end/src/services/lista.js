@@ -38,3 +38,11 @@ export async function updateLista(id, nomeLista) {
   if (!response.ok) throw new Error(await response.text());
   return await response.json();
 }
+
+export async function deleteLista(id) {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+      headers: { ...getAuthHeader() }
+    });
+    if (!response.ok) throw new Error(await response.text());
+  }

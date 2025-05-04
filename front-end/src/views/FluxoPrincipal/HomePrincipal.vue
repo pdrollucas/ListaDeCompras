@@ -5,13 +5,14 @@
         <div class="mt-10 mb-10 listas">
             <template v-if="listas && listas.length > 0">
                 <ul v-for="lista in listas" :key="lista.idLista">
-                    <li class="lista py-2 pb-2" @click="openLista(lista.idLista)">
-                        {{ lista.nomeLista }}
+                    <li class="lista py-4 px-4">
+                        <span @click="openLista(lista.idLista)"> {{ lista.nomeLista }}</span>
+                        <span @click="removeLista(lista.idLista)">x</span>
                     </li>
                 </ul>
             </template>
             <template v-else>
-                <p class="lista py-2 pb-2">Você não possui nenhuma lista até o momento</p>
+                <p class="lista py-4 px-4 text-center">Você não possui nenhuma lista até o momento</p>
             </template>
         </div>
         <v-btn class="btnInicial" @click="addLista()">Adicionar lista</v-btn>
@@ -21,6 +22,7 @@
 <script>
 import HeaderPrincipal from '@/components/HeaderPrincipal.vue';
 import { useUserStore } from '@/stores/user'
+import { addLista, deleteLista } from '@/services/lista.js'
 
 export default {
     components: { HeaderPrincipal },
@@ -41,8 +43,23 @@ export default {
         openLista(id) {
             this.$router.push({ name: 'listaEditar', params: { id } })
         },
-        addLista() {
-            this.$router.push({ name: 'listaCriar' })
+        async addLista() {
+            try {
+                const novaLista = await addLista('Nova Lista')
+                this.userStore.listas.push(novaLista)
+                this.$router.push({ name: 'listaEditar', params: { id: novaLista.idLista } })
+            } catch (err) {
+                alert('Erro ao criar lista: ' + err.message)
+            }
+        },
+        async removeLista(id) {
+            if (!confirm('Tem certeza que deseja deletar esta lista?')) return;
+            try {
+                await deleteLista(id)
+                this.userStore.listas = this.userStore.listas.filter(l => l.idLista !== id)
+            } catch (err) {
+                alert('Erro ao deletar lista: ' + err.message)
+            }
         }
     }
 }
@@ -61,6 +78,8 @@ img {
 .lista {
     background-color: #DEDEDE;
     width: 75dvw;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>

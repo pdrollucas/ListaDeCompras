@@ -4,22 +4,22 @@
         <div class="text-center mb-6">
             <input type="text" v-model="nomeLista" class="inputListName text-center">
             <v-form>
-                <v-text-field label="Item" class="input mt-8"></v-text-field>
-                <v-text-field label="Quantidade" class="input"></v-text-field>
+                <v-text-field label="Item" class="input mt-8" v-model="nomeItem"></v-text-field>
+                <v-text-field label="Quantidade" class="input" v-model="quantidade"></v-text-field>
             </v-form>
-            <v-btn class="btnAddItem">Adicionar</v-btn>
+            <v-btn class="btnAddItem" @click="addItem()">Adicionar</v-btn>
         </div>
         <div class="itens py-10 px-10">
-            <ul v-for="item in itens" :key="item.id">
+            <ul v-for="item in itens" :key="item.idItem">
                 <li class="item py-4 px-4">
-                    <span>{{ item.quantidade }} - {{ item.text }}</span>
-                    <span @click="removeItem()">x</span>
+                    <span>{{ item.quantidade }} - {{ item.nomeItem }}</span>
+                    <span @click="removeItem(item.idItem)">x</span>
                 </li>
             </ul>
         </div>
         <div class="w-100 d-flex justify-content-between align-items-center mt-10">
             <span></span>
-            <v-btn class="btnSalvar" @click="saveLista()">{{ isEdicao ? 'Salvar' : 'Criar' }}</v-btn>
+            <v-btn class="btnSalvar" @click="saveLista()">Salvar</v-btn>
             <img src="../../assets/imgs/shareIcon.svg" alt="Botão de Compartilhar">
         </div>
     </div>
@@ -28,7 +28,8 @@
 <script>
 import HeaderPrincipal from '@/components/HeaderPrincipal.vue'
 import { useUserStore } from '@/stores/user'
-import { addLista, updateLista } from '@/services/lista.js'
+import { updateLista } from '@/services/lista.js'
+import { getItens, addItem, deleteItem } from '@/services/item.js'
 
 export default {
   components: { HeaderPrincipal },
@@ -36,41 +37,53 @@ export default {
     return {
       nomeLista: 'Digite o nome da lista',
       idLista: null,
-      isEdicao: false,
+      itens: [],
+      nomeItem: '',
+      quantidade: '',
       userStore: useUserStore()
     }
   },
   async mounted() {
     this.idLista = this.$route.params.id
-    this.isEdicao = !!this.idLista
 
-    if (this.isEdicao) {
-      // Garante que as listas estão carregadas
-      if (!this.userStore.listas.length) {
+    if (!this.userStore.listas.length) {
         await this.userStore.fetchListas()
-      }
-      const lista = this.userStore.listas.find(l => l.idLista == this.idLista)
-      if (!lista) {
+    }
+    const lista = this.userStore.listas.find(l => l.idLista == this.idLista)
+    if (!lista) {
         alert('Lista não encontrada ou não pertence a você!')
         this.$router.push('/home')
         return
-      }
-      this.nomeLista = lista.nomeLista
     }
-    // Se não for edição, nomeLista já fica vazio para criar nova lista
+    this.nomeLista = lista.nomeLista
+    this.itens = await getItens(this.idLista)
   },
   methods: {
     async saveLista() {
-      try {
-        if (this.isEdicao) {
-          await updateLista(this.idLista, this.nomeLista)
-        } else {
-          await addLista(this.nomeLista)
-        }
+        try {
+        await updateLista(this.idLista, this.nomeLista)
         await this.userStore.fetchListas()
         this.$router.push('/home')
-      } catch (err) {
+        } catch (err) {
         alert('Erro ao salvar lista: ' + err.message)
+        }
+    },
+    async addItem() {
+      try {
+        await addItem(this.idLista, this.nomeItem, this.quantidade)
+        this.itens = await getItens(this.idLista)
+        this.nomeItem = ''
+        this.quantidade = ''
+      } catch (err) {
+        alert('Erro ao adicionar item: ' + err.message)
+      }
+    },
+    async removeItem(idItem) {
+      try {
+        await deleteItem(this.idLista, idItem)
+        this.itens = await getItens(this.idLista)
+      } catch (err) {
+        alert('Erro ao remover item: ' + err.message)
       }
     }
   }
