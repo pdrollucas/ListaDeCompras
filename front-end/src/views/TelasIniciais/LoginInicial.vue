@@ -3,7 +3,14 @@
     <LogoInicio/>
     <v-form>
       <v-text-field v-model="email" label="Usuário / email" class="input mt-8"></v-text-field>
-      <v-text-field v-model="senha" label="Senha" class="input" type="password"></v-text-field>
+      <v-text-field
+        v-model="senha"
+        :type="showPassword ? 'text' : 'password'"
+        label="Senha"
+        class="input"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+      ></v-text-field>
     </v-form>
     <v-btn class="btnInicial mt-8" @click="logar()">Entrar</v-btn>
     <p class="mt-4">Não possui uma conta? <RouterLink to="/cadastrar" class="ml-2 textoLink">Cadastre-se</RouterLink> </p>
@@ -20,7 +27,8 @@
     data() {
       return {
         email: '',
-        senha: ''
+        senha: '',
+        showPassword: false
       }
     },
     methods: {

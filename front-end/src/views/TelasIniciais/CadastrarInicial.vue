@@ -4,8 +4,22 @@
     <v-form>
       <v-text-field v-model="email" label="Email" class="input mt-8"></v-text-field>
       <v-text-field v-model="nomeUsuario" label="Usuário" class="input"></v-text-field>
-      <v-text-field v-model="senha" label="Senha" class="input" type="password"></v-text-field>
-      <v-text-field v-model="confirmarSenha" label="Confirmar senha" class="input" type="password"></v-text-field>
+      <v-text-field
+        v-model="senha"
+        :type="showPassword ? 'text' : 'password'"
+        label="Senha"
+        class="input"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+      ></v-text-field>
+      <v-text-field
+        v-model="confirmarSenha"
+        :type="showConfirmPassword ? 'text' : 'password'"
+        label="Confirmar senha"
+        class="input"
+        :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showConfirmPassword = !showConfirmPassword"
+      ></v-text-field>
     </v-form>
     <v-btn class="btnInicial mt-8" @click="cadastrar()">Cadastrar</v-btn>
     <p class="mt-4">Já possui uma conta? <RouterLink to="/login" class="ml-2 textoLink">Entre</RouterLink> </p>
@@ -24,7 +38,9 @@
         email: '',
         nomeUsuario: '',
         senha: '',
-        confirmarSenha: ''
+        confirmarSenha: '',
+        showPassword: false,
+        showConfirmPassword: false
       }
     },
     methods: {
