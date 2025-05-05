@@ -1,7 +1,11 @@
 <template>
     <div class="device py-10 px-8">
-        <HeaderPrincipal />
-        <div class="text-center mb-6">
+        <HeaderPrincipal :telaExpandida="telaExpandida">
+            <template #right>
+                <v-icon v-if="telaExpandida" icon @click="toggleExpandir">mdi-arrow-collapse</v-icon>
+            </template>
+        </HeaderPrincipal>
+        <div v-if="!telaExpandida" class="text-center mb-6">
             <input type="text" v-model="nomeLista" class="inputListName text-center">
             <v-form>
                 <v-text-field label="Item" class="input mt-8" v-model="nomeItem"></v-text-field>
@@ -9,15 +13,23 @@
             </v-form>
             <v-btn class="btnAddItem" @click="addItem()">Adicionar</v-btn>
         </div>
-        <div class="itens py-10 px-10">
+        <div :class="['itens', telaExpandida ? 'itens-telaExpandida' : '']">
+          <span class="w-100 mt-4 pr-2 expandirBtn">
+            <v-icon v-if="!telaExpandida" @click="toggleExpandir" small>mdi-arrow-expand</v-icon>
+          </span>
+          <div class="py-10">
             <ul v-for="item in itens" :key="item.idItem">
                 <li class="item py-4 px-4">
                     <span>{{ item.quantidade }} - {{ item.nomeItem }}</span>
                     <span @click="removeItem(item.idItem)">x</span>
                 </li>
             </ul>
+          </div>
         </div>
-        <div class="w-100 d-flex justify-content-between align-items-center mt-10">
+        <div
+            v-if="!telaExpandida"
+            class="w-100 d-flex justify-content-between align-items-center mt-10"
+        >
             <span></span>
             <v-btn class="btnSalvar" @click="saveLista()">Salvar</v-btn>
             <img src="../../assets/imgs/shareIcon.svg" alt="Botão de Compartilhar">
@@ -40,6 +52,7 @@ export default {
       itens: [],
       nomeItem: '',
       quantidade: '',
+      telaExpandida: false,
       userStore: useUserStore()
     }
   },
@@ -85,6 +98,12 @@ export default {
       } catch (err) {
         alert('Erro ao remover item: ' + err.message)
       }
+    },
+    toggleExpandir() {
+      this.telaExpandida = !this.telaExpandida
+    },
+    goHome() {
+      this.$router.push('/home')
     }
   }
 }
@@ -107,11 +126,16 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100dvw;
-    height: 40dvh;
+    height: 50dvh;
     overflow-y: auto;
     background-color: #DEDEDE;
     border-top: 1px solid gray;
     border-bottom: 1px solid gray;
+    transition: height 0.3s;
+}
+
+.itens-telaExpandida {
+    height: 80dvh !important;
 }
 
 .item {
@@ -120,6 +144,13 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.expandirBtn {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  color: gray;
 }
 
 .btnSalvar {
