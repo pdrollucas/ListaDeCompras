@@ -2,13 +2,12 @@
   <div class="containerInicial">
     <LogoInicio/>
     <v-form>
-      <v-text-field v-model="email" label="Email" class="input mt-8"></v-text-field>
-      <v-text-field v-model="nomeUsuario" label="Usuário" class="input"></v-text-field>
+      <v-text-field v-model="email" label="Código recebido no e-mail" class="inputInicial mt-8"></v-text-field>
       <v-text-field
         v-model="senha"
         :type="showPassword ? 'text' : 'password'"
-        label="Senha"
-        class="input"
+        label="Nova senha"
+        class="inputInicial"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showPassword = !showPassword"
       ></v-text-field>
@@ -16,23 +15,23 @@
         v-model="confirmarSenha"
         :type="showConfirmPassword ? 'text' : 'password'"
         label="Confirmar senha"
-        class="input"
+        class="inputInicial"
         :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showConfirmPassword = !showConfirmPassword"
       ></v-text-field>
     </v-form>
-    <v-btn class="btnInicial mt-8" @click="cadastrar()">Cadastrar</v-btn>
-    <p class="mt-4">Já possui uma conta? <RouterLink to="/login" class="ml-2 textoLink">Entre</RouterLink> </p>
+    <v-btn class="btnInicial mt-8" @click="atualizarSenha()">Atualizar senha</v-btn>
+    <p class="mt-4 textoLink" @click="reenviarCodigo()">Reenviar código</p>
   </div>
 </template>
 
 <script>
-  import LogoInicio from '@/components/LogoInicio.vue';
-  import { register } from '@/services/auth.js';
-  import { useUserStore } from '@/stores/user'
+import LogoInicio from '@/components/LogoInicio.vue';
 
-  export default {
-    components: { LogoInicio },
+export default {
+    components: {
+        LogoInicio
+    },
     data() {
       return {
         email: '',
@@ -44,20 +43,23 @@
       }
     },
     methods: {
-      async cadastrar () {
+      async atualizarSenha () {
         if (this.senha !== this.confirmarSenha) {
           alert('As senhas não coincidem!');
           return;
         }
         try {
-          await register(this.email, this.senha, this.nomeUsuario);
-          const userStore = useUserStore()
-          userStore.setToken(localStorage.getItem('token'))
-          this.$router.push('/home');
+          // await
+          // atualizar a senha do usuário
+          // setar o token jwt
+          // this.$router.push('/home')
         } catch (err) {
-          alert('Erro ao cadastrar: ' + err.message);
+          alert('Erro ao atualizar senha: ' + err.message);
         }
+      },
+      async reenviarCodigo () {
+        //
       }
     }
-  }
+}
 </script>

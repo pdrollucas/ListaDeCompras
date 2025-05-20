@@ -21,6 +21,16 @@ const router = createRouter({
       component: () => import('../views/TelasIniciais/CadastrarInicial.vue'),
     },
     {
+      path: '/esqueceu-senha',
+      name: 'esqueceu-senha',
+      component: () => import('../views/TelasIniciais/EsqueceuSenha.vue'),
+    },
+    {
+      path: '/recuperacao-senha',
+      name: 'recuperacao-senha',
+      component: () => import('../views/TelasIniciais/RecuperacaoSenha.vue'),
+    },
+    {
       path: '/home',
       name: 'homePrincipal',
       component: () => import('../views/FluxoPrincipal/HomePrincipal.vue'),

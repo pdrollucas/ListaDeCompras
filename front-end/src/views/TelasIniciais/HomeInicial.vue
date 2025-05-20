@@ -2,7 +2,7 @@
   <RouterView />
   <header>
     <div>
-      <div class="about">
+      <div class="logoInicio">
         <LogoInicio/>
       </div>
       <nav class="btns">
@@ -19,7 +19,7 @@
 </script>
 
 <style scoped>
-.about {
+.logoInicio {
   height: 75dvh;
   display: flex;
   align-items: center;

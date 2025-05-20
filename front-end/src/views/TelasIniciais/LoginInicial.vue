@@ -1,19 +1,20 @@
 <template>
-  <div class="about">
+  <div class="containerInicial">
     <LogoInicio/>
     <v-form>
-      <v-text-field v-model="email" label="Usuário / email" class="input mt-8"></v-text-field>
+      <v-text-field v-model="email" label="Usuário / email" class="inputInicial mt-8"></v-text-field>
       <v-text-field
         v-model="senha"
         :type="showPassword ? 'text' : 'password'"
         label="Senha"
-        class="input"
+        class="inputInicial"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showPassword = !showPassword"
       ></v-text-field>
     </v-form>
     <v-btn class="btnInicial mt-8" @click="logar()">Entrar</v-btn>
     <p class="mt-4">Não possui uma conta? <RouterLink to="/cadastrar" class="ml-2 textoLink">Cadastre-se</RouterLink> </p>
+    <p class="mt-10"><RouterLink to="/esqueceu-senha" class="textoLink">Esqueci minha senha</RouterLink> </p>
   </div>
 </template>
 
@@ -45,18 +46,3 @@
     }
   }
 </script>
-
-<style scoped>
-.about {
-  min-height: 75dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.input {
-  width: 75vw;
-  font-size: 16px;
-}
-</style>
