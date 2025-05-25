@@ -5,6 +5,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ShoppingListAPI.Models;
+using System.Net.Mail;
+using System.Net;
 
 namespace ShoppingListAPI.Services
 {
@@ -12,6 +14,7 @@ namespace ShoppingListAPI.Services
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IConfiguration _configuration;
+        private static Dictionary<string, (string codigo, DateTime expiracao)> _codigosRecuperacao = new();
 
         public AuthService(IUsuarioRepository usuarioRepository, IConfiguration configuration)
         {
@@ -66,6 +69,82 @@ namespace ShoppingListAPI.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<bool> SolicitarRecuperacaoSenha(string email)
+        {
+            var usuario = await _usuarioRepository.GetUsuarioByEmail(email);
+            if (usuario == null)
+            {
+                throw new Exception("Email não encontrado");
+            }
+
+            var codigo = GerarCodigoAleatorio();
+            _codigosRecuperacao[email] = (codigo, DateTime.Now.AddMinutes(15));
+
+            await EnviarEmailRecuperacao(email, codigo);
+            return true;
+        }
+
+        public async Task<string> ValidarCodigoEAtualizarSenha(string email, string codigo, string novaSenha)
+        {
+            if (!_codigosRecuperacao.ContainsKey(email))
+            {
+                throw new Exception("Nenhum código de recuperação solicitado para este email");
+            }
+
+            var (codigoSalvo, expiracao) = _codigosRecuperacao[email];
+            if (DateTime.Now > expiracao)
+            {
+                _codigosRecuperacao.Remove(email);
+                throw new Exception("Código expirado");
+            }
+
+            if (codigo != codigoSalvo)
+            {
+                throw new Exception("Código inválido");
+            }
+
+            var usuario = await _usuarioRepository.GetUsuarioByEmail(email);
+            await _usuarioRepository.UpdatePassword(usuario.IdUsuario, novaSenha);
+
+            _codigosRecuperacao.Remove(email);
+            return GenerateJwtToken(usuario);
+        }
+
+        private string GerarCodigoAleatorio()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999).ToString();
+        }
+
+        private async Task EnviarEmailRecuperacao(string email, string codigo)
+        {
+            var smtpServer = _configuration["EmailSettings:SmtpServer"];
+            var port = int.Parse(_configuration["EmailSettings:Port"]);
+            var username = _configuration["EmailSettings:Username"];
+            var password = _configuration["EmailSettings:Password"];
+
+            using var client = new SmtpClient()
+            {
+                Host = smtpServer,
+                Port = port,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(username, password)
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(username),
+                Subject = "Recuperação de Senha - Lista de Compras",
+                Body = $"Seu código de recuperação de senha é: {codigo}\n\nEste código expira em 15 minutos.",
+                IsBodyHtml = false
+            };
+            mailMessage.To.Add(email);
+
+            await client.SendMailAsync(mailMessage);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using ShoppingListAPI.Models;
+using ShoppingListAPI.Models;
 using ShoppingListAPI.Models.DTOs;
 
 namespace ShoppingListAPI.Interfaces
@@ -10,5 +10,6 @@ namespace ShoppingListAPI.Interfaces
         Task<Usuario> AddUsuario(UsuarioRegisterDTO usuarioRegisterDTO);
         Task<bool> UsuarioExists(string email);
         Task<bool> CheckPassword(UsuarioLoginDTO usuarioLoginDTO);
+        Task UpdatePassword(int userId, string newPassword);
     }
 }

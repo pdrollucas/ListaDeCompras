@@ -46,6 +46,38 @@ export function isAuthenticated() {
   return !!localStorage.getItem("token");
 }
 
+export async function solicitarRecuperacaoSenha(email) {
+  const response = await fetch(`${API_URL}/solicitar-recuperacao`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error);
+  }
+
+  return await response.json();
+}
+
+export async function validarCodigoEAtualizarSenha(email, codigo, novaSenha) {
+  const response = await fetch(`${API_URL}/validar-codigo`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, codigo, novaSenha }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error);
+  }
+
+  const data = await response.json();
+  localStorage.setItem("token", data.token);
+  return data.token;
+}
+
 // Função para decodificar o token JWT
 function parseJwt(token) {
   if (!token) return null;

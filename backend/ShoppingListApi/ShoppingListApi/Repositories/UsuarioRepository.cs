@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ShoppingListAPI.Context;
 using ShoppingListAPI.Interfaces;
 using ShoppingListAPI.Models;
@@ -65,6 +65,16 @@ namespace ShoppingListAPI.Repositories
         {
             var hashOfInput = HashPassword(inputPassword);
             return string.Equals(hashOfInput, storedHash);
+        }
+
+        public async Task UpdatePassword(int userId, string newPassword)
+        {
+            var usuario = await GetUsuarioById(userId);
+            if (usuario == null)
+                throw new Exception("Usuário não encontrado");
+
+            usuario.Senha = HashPassword(newPassword);
+            await _context.SaveChangesAsync();
         }
     }
 }

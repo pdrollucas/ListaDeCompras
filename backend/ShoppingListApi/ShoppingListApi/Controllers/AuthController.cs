@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ShoppingListAPI.Models.DTOs;
 using ShoppingListAPI.Services;
 
@@ -40,6 +40,34 @@ namespace ShoppingListAPI.Controllers
             catch (Exception ex)
             {
                 return Unauthorized(ex.Message);
+            }
+        }
+
+        [HttpPost("solicitar-recuperacao")]
+        public async Task<IActionResult> SolicitarRecuperacao([FromBody] SolicitarRecuperacaoDTO dto)
+        {
+            try
+            {
+                await _authService.SolicitarRecuperacaoSenha(dto.Email);
+                return Ok(new { message = "Código de recuperação enviado com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("validar-codigo")]
+        public async Task<IActionResult> ValidarCodigo([FromBody] ValidarCodigoDTO dto)
+        {
+            try
+            {
+                var token = await _authService.ValidarCodigoEAtualizarSenha(dto.Email, dto.Codigo, dto.NovaSenha);
+                return Ok(new { token });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
