@@ -6,12 +6,12 @@
             </template>
         </HeaderPrincipal>
         <div v-if="!telaExpandida" class="text-center mb-6">
-            <input type="text" v-model="nomeLista" class="inputListName text-center">
+            <input type="text" v-model="nomeLista" class="inputListName text-center" data-cy="list-name-input">
             <v-form>
-                <v-text-field label="Item" class="input mt-8" v-model="nomeItem"></v-text-field>
-                <v-text-field label="Quantidade" class="input" v-model="quantidade"></v-text-field>
+                <v-text-field label="Item" class="input mt-8" v-model="nomeItem" data-cy="item-name-input"></v-text-field>
+                <v-text-field label="Quantidade" class="input" v-model="quantidade" data-cy="item-quantity-input"></v-text-field>
             </v-form>
-            <v-btn class="btnAddItem" @click="addItem()">Adicionar</v-btn>
+            <v-btn class="btnAddItem" @click="addItem()" data-cy="new-item-button">Adicionar</v-btn>
         </div>
         <div :class="['itens', telaExpandida ? 'itens-telaExpandida' : '']">
           <span class="w-100 mt-4 pr-2 expandirBtn">
@@ -21,7 +21,7 @@
             <ul v-for="item in itens" :key="item.idItem">
                 <li class="item py-4 px-4">
                     <span>{{ item.quantidade }} - {{ item.nomeItem }}</span>
-                    <span @click="removeItem(item.idItem)">x</span>
+                    <span @click="removeItem(item.idItem)" data-cy="delete-item-button">x</span>
                 </li>
             </ul>
           </div>
@@ -31,7 +31,7 @@
             class="w-100 d-flex justify-content-between align-items-center mt-10"
         >
             <span></span>
-            <v-btn class="btnSalvar" @click="saveLista()">Salvar</v-btn>
+            <v-btn class="btnSalvar" @click="saveLista()" data-cy="save-list-button">Salvar</v-btn>
             <img src="../../assets/imgs/shareIcon.svg" alt="Botão de Compartilhar">
         </div>
     </div>

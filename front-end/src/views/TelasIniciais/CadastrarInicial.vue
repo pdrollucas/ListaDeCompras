@@ -2,8 +2,8 @@
   <div class="containerInicial">
     <LogoInicio/>
     <v-form>
-      <v-text-field v-model="email" label="Email" class="input mt-8"></v-text-field>
-      <v-text-field v-model="nomeUsuario" label="Usuário" class="input"></v-text-field>
+      <v-text-field v-model="email" label="Email" class="input mt-8" data-cy="register-email"></v-text-field>
+      <v-text-field v-model="nomeUsuario" label="Usuário" class="input" data-cy="register-name"></v-text-field>
       <v-text-field
         v-model="senha"
         :type="showPassword ? 'text' : 'password'"
@@ -11,6 +11,7 @@
         class="input"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showPassword = !showPassword"
+        data-cy="register-password"
       ></v-text-field>
       <v-text-field
         v-model="confirmarSenha"
@@ -19,9 +20,10 @@
         class="input"
         :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showConfirmPassword = !showConfirmPassword"
+        data-cy="register-confirm-password"
       ></v-text-field>
     </v-form>
-    <v-btn class="btnInicial mt-8" @click="cadastrar()">Cadastrar</v-btn>
+    <v-btn class="btnInicial mt-8" @click="cadastrar()" data-cy="register-submit">Cadastrar</v-btn>
     <p class="mt-4">Já possui uma conta? <RouterLink to="/login" class="ml-2 textoLink">Entre</RouterLink> </p>
   </div>
 </template>

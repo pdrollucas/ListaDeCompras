@@ -1,7 +1,7 @@
 <template>
     <div class="w-100 d-flex justify-content-between align-items-center mb-6" v-if="telaHome">
         <span>{{ model.usuario }}</span>
-        <span @click="logout()" class="textoLink">Sair</span>
+        <span @click="logout()" class="textoLink" data-cy="logout-button">Sair</span>
     </div>
     <div class="w-100 d-flex justify-content-between align-items-center mb-6" v-else-if="telaExpandida">
         <img src="../assets/imgs/CartHeader.svg" alt="Logo" @click="goHome()" class="h-75">

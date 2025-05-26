@@ -6,8 +6,8 @@
         <LogoInicio/>
       </div>
       <nav class="btns">
-        <RouterLink to="/login" class="mr-2 btn btn-1">Entrar</RouterLink>
-        <RouterLink to="/cadastrar" class="ml-2 btn btn-2">Cadastrar</RouterLink>
+        <RouterLink to="/login" class="mr-2 btn btn-1" data-cy="login-link">Entrar</RouterLink>
+        <RouterLink to="/cadastrar" class="ml-2 btn btn-2" data-cy="register-link">Cadastrar</RouterLink>
       </nav>
     </div>
   </header>

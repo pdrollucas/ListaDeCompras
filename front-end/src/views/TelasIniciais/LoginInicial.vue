@@ -2,7 +2,7 @@
   <div class="containerInicial">
     <LogoInicio/>
     <v-form>
-      <v-text-field v-model="email" label="Usuário / email" class="inputInicial mt-8"></v-text-field>
+      <v-text-field v-model="email" label="Usuário / email" class="inputInicial mt-8" data-cy="login-email"></v-text-field>
       <v-text-field
         v-model="senha"
         :type="showPassword ? 'text' : 'password'"
@@ -10,10 +10,11 @@
         class="inputInicial"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showPassword = !showPassword"
+        data-cy="login-password"
       ></v-text-field>
     </v-form>
-    <v-btn class="btnInicial mt-8" @click="logar()">Entrar</v-btn>
-    <p class="mt-4">Não possui uma conta? <RouterLink to="/cadastrar" class="ml-2 textoLink">Cadastre-se</RouterLink> </p>
+    <v-btn class="btnInicial mt-8" @click="logar()" data-cy="login-submit">Entrar</v-btn>
+    <p class="mt-4">Não possui uma conta? <RouterLink to="/cadastrar" class="ml-2 textoLink" data-cy="register-link">Cadastre-se</RouterLink> </p>
     <p class="mt-10"><RouterLink to="/esqueceu-senha" class="textoLink">Esqueci minha senha</RouterLink> </p>
   </div>
 </template>

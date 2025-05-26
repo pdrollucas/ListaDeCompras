@@ -6,8 +6,8 @@
             <template v-if="listas && listas.length > 0">
                 <ul v-for="lista in listas" :key="lista.idLista">
                     <li class="lista py-4 px-4">
-                        <span @click="openLista(lista.idLista)"> {{ lista.nomeLista }}</span>
-                        <span @click="removeLista(lista.idLista)">x</span>
+                        <span @click="openLista(lista.idLista)" data-cy="list-item"> {{ lista.nomeLista }}</span>
+                        <span @click="removeLista(lista.idLista)" data-cy="delete-list-button">x</span>
                     </li>
                 </ul>
             </template>
@@ -15,7 +15,7 @@
                 <p class="lista py-4 px-4 text-center">Você não possui nenhuma lista até o momento</p>
             </template>
         </div>
-        <v-btn class="btnInicial" @click="addLista()">Adicionar lista</v-btn>
+        <v-btn class="btnInicial" @click="addLista()" data-cy="new-list-button">Adicionar lista</v-btn>
     </div>
 </template>
 
