@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingListAPI.Interfaces;
 using ShoppingListAPI.Models.DTOs;
@@ -72,7 +72,14 @@ namespace ShoppingListAPI.Controllers
             var item = await _itemRepository.UpdateItem(itemUpdateDTO, id);
             if (item == null) return NotFound();
 
-            return Ok(item);
+            var itemDto = new ItemDTO
+            {
+                IdItem = item.IdItem,
+                NomeItem = item.NomeItem,
+                Quantidade = item.Quantidade
+            };
+
+            return Ok(itemDto);
         }
 
         [HttpDelete("{id}")]
