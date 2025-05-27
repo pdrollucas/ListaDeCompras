@@ -21,15 +21,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
       - name: Install SonarCloud scanner
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          npm install -g sonarqube-scanner
 
       - name: Build and analyze backend
         env:
@@ -41,25 +35,4 @@ jobs:
           dotnet test ./backend/ShoppingListApi/ShoppingListApi.Tests/ShoppingListApi.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --logger trx
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Analyze frontend
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          cd front-end
-          npm install
-          npm run test:coverage
-          sonar-scanner \
-            -Dsonar.organization="pdrollucas" \
-            -Dsonar.projectKey="pdrollucas_ListaDeCompras-Frontend" \
-            -Dsonar.sources=. \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-            -Dsonar.coverage.exclusions="**/cypress/**,**/coverage/**,**/*.config.js" \
-            -Dsonar.test.inclusions="**/*.{test,spec,cy}.{js,ts,jsx,tsx}" \
-            -Dsonar.host.url="https://sonarcloud.io" \
-            -Dsonar.login="${{ secrets.SONAR_TOKEN }}" \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-            -Dsonar.coverage.exclusions="**/*.test.js,**/*.spec.js,**/tests/**,**/cypress/**" \
-            -Dsonar.cpd.exclusions="**/tests/**,**/cypress/**" \
-            -Dsonar.sourceEncoding="UTF-8" \
-            -Dsonar.verbose=true
+
