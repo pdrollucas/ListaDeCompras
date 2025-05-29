@@ -1,5 +1,13 @@
 <template>
     <div class="device py-10 px-8">
+        <v-snackbar
+            v-model="snackbar.show"
+            :color="snackbar.color"
+            :timeout="4000"
+            location="top"
+        >
+            {{ snackbar.text }}
+        </v-snackbar>
         <HeaderPrincipal :telaExpandida="telaExpandida">
             <template #right>
                 <v-icon v-if="telaExpandida" icon @click="toggleExpandir">mdi-arrow-collapse</v-icon>
@@ -59,7 +67,12 @@ export default {
       nomeItem: '',
       quantidade: '',
       telaExpandida: false,
-      userStore: useUserStore()
+      userStore: useUserStore(),
+      snackbar: {
+        show: false,
+        text: '',
+        color: 'success'
+      }
     }
   },
   async mounted() {
@@ -68,41 +81,90 @@ export default {
     if (!this.userStore.listas.length) {
         await this.userStore.fetchListas()
     }
-    const lista = this.userStore.listas.find(l => l.idLista == this.idLista)
-    if (!lista) {
-        alert('Lista não encontrada ou não pertence a você!')
+    try {
+      const lista = this.userStore.listas.find(l => l.idLista == this.idLista)
+      if (!lista) {
+        this.snackbar = {
+          show: true,
+          text: 'Lista não encontrada ou não pertence a você!',
+          color: 'error'
+        }
         this.$router.push('/home')
         return
+      }
+      this.nomeLista = lista.nomeLista
+      this.itens = await getItens(this.idLista)
+    } catch (err) {
+      this.snackbar = {
+        show: true,
+        text: err.response?.data || 'Erro ao carregar lista',
+        color: 'error'
+      }
+      this.$router.push('/home')
     }
-    this.nomeLista = lista.nomeLista
-    this.itens = await getItens(this.idLista)
   },
   methods: {
     async saveLista() {
-        try {
+      try {
         await updateLista(this.idLista, this.nomeLista)
         await this.userStore.fetchListas()
-        this.$router.push('/home')
-        } catch (err) {
-        alert('Erro ao salvar lista: ' + err.message)
+        this.snackbar = {
+          show: true,
+          text: 'Lista salva com sucesso!',
+          color: 'success'
         }
+        this.$router.push('/home')
+      } catch (err) {
+        this.snackbar = {
+          show: true,
+          text: err.response?.data || 'Erro ao salvar lista',
+          color: 'error'
+        }
+      }
     },
     async addItem() {
+      if (!this.nomeItem || !this.quantidade) {
+        this.snackbar = {
+          show: true,
+          text: 'Preencha o nome e a quantidade do item',
+          color: 'warning'
+        }
+        return
+      }
+
       try {
         await addItem(this.idLista, this.nomeItem, this.quantidade)
         this.itens = await getItens(this.idLista)
         this.nomeItem = ''
         this.quantidade = ''
+        this.snackbar = {
+          show: true,
+          text: 'Item adicionado com sucesso!',
+          color: 'success'
+        }
       } catch (err) {
-        alert('Erro ao adicionar item: ' + err.message)
+        this.snackbar = {
+          show: true,
+          text: err.response?.data || 'Erro ao adicionar item',
+          color: 'error'
+        }
       }
     },
     async removeItem(idItem) {
       try {
         await deleteItem(this.idLista, idItem)
         this.itens = await getItens(this.idLista)
+        this.snackbar = {
+          show: true,
+          text: 'Item removido com sucesso!',
+          color: 'success'
+        }
       } catch (err) {
-        alert('Erro ao remover item: ' + err.message)
+        this.snackbar = {
+          show: true,
+          text: err.response?.data || 'Erro ao remover item',
+          color: 'error'
+        }
       }
     },
     async compartilharNoWhatsApp() {

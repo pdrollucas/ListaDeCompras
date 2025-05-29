@@ -1,5 +1,13 @@
 <template>
   <div class="containerInicial">
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="4000"
+      location="top"
+    >
+      {{ snackbar.text }}
+    </v-snackbar>
     <LogoInicio/>
     <v-form>
       <v-text-field v-model="email" label="Email" class="input mt-8" data-cy="register-email"></v-text-field>
@@ -42,22 +50,67 @@
         senha: '',
         confirmarSenha: '',
         showPassword: false,
-        showConfirmPassword: false
+        showConfirmPassword: false,
+        snackbar: {
+          show: false,
+          text: '',
+          color: 'success'
+        },
+        errors: {
+          email: false,
+          nomeUsuario: false,
+          senha: false,
+          confirmarSenha: false
+        }
       }
     },
     methods: {
-      async cadastrar () {
-        if (this.senha !== this.confirmarSenha) {
-          alert('As senhas não coincidem!');
-          return;
+      validateForm() {
+        this.errors = {
+          email: !this.email || !this.email.includes('@'),
+          nomeUsuario: !this.nomeUsuario || this.nomeUsuario.length < 3,
+          senha: !this.senha || this.senha.length < 6,
+          confirmarSenha: this.senha !== this.confirmarSenha
         }
+
+        if (Object.values(this.errors).some(error => error)) {
+          let errorMessage = '';
+          if (this.errors.email) errorMessage = 'Email inválido';
+          else if (this.errors.nomeUsuario) errorMessage = 'Nome de usuário deve ter pelo menos 3 caracteres';
+          else if (this.errors.senha) errorMessage = 'Senha deve ter pelo menos 6 caracteres';
+          else if (this.errors.confirmarSenha) errorMessage = 'As senhas não coincidem';
+
+          this.snackbar = {
+            show: true,
+            text: errorMessage,
+            color: 'error'
+          };
+          return false;
+        }
+        return true;
+      },
+
+      async cadastrar() {
+        if (!this.validateForm()) return;
+
         try {
           await register(this.email, this.senha, this.nomeUsuario);
           const userStore = useUserStore()
           userStore.setToken(localStorage.getItem('token'))
+          
+          this.snackbar = {
+            show: true,
+            text: 'Cadastro realizado com sucesso!',
+            color: 'success'
+          };
+          
           this.$router.push('/home');
         } catch (err) {
-          alert('Erro ao cadastrar: ' + err.message);
+          this.snackbar = {
+            show: true,
+            text: err.response?.data || 'Erro ao cadastrar usuário',
+            color: 'error'
+          };
         }
       }
     }

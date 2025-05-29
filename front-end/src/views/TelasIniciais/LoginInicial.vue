@@ -1,5 +1,13 @@
 <template>
   <div class="containerInicial">
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="4000"
+      location="top"
+    >
+      {{ snackbar.text }}
+    </v-snackbar>
     <LogoInicio/>
     <v-form>
       <v-text-field v-model="email" label="Usuário / email" class="inputInicial mt-8" data-cy="login-email"></v-text-field>
@@ -30,18 +38,61 @@
       return {
         email: '',
         senha: '',
-        showPassword: false
+        showPassword: false,
+        snackbar: {
+          show: false,
+          text: '',
+          color: 'success'
+        },
+        errors: {
+          email: false,
+          senha: false
+        }
       }
     },
     methods: {
-      async logar () {
+      validateForm() {
+        this.errors = {
+          email: !this.email || !this.email.includes('@'),
+          senha: !this.senha || this.senha.length < 6
+        }
+
+        if (Object.values(this.errors).some(error => error)) {
+          let errorMessage = '';
+          if (this.errors.email) errorMessage = 'Email inválido';
+          else if (this.errors.senha) errorMessage = 'Senha inválida';
+
+          this.snackbar = {
+            show: true,
+            text: errorMessage,
+            color: 'error'
+          };
+          return false;
+        }
+        return true;
+      },
+
+      async logar() {
+        if (!this.validateForm()) return;
+
         try {
           await login(this.email, this.senha)
           const userStore = useUserStore()
           userStore.setToken(localStorage.getItem('token'))
+          
+          this.snackbar = {
+            show: true,
+            text: 'Login realizado com sucesso!',
+            color: 'success'
+          };
+          
           this.$router.push('/home')
         } catch (err) {
-          alert('Erro ao fazer login: ' + err.message)
+          this.snackbar = {
+            show: true,
+            text: err.response?.data || 'Email ou senha incorretos',
+            color: 'error'
+          };
         }
       }
     }
