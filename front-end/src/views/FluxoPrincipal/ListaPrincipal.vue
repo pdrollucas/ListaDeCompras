@@ -9,7 +9,13 @@
             <input type="text" v-model="nomeLista" class="inputListName text-center" data-cy="list-name-input">
             <v-form>
                 <v-text-field label="Item" class="input mt-8" v-model="nomeItem" data-cy="item-name-input"></v-text-field>
-                <v-text-field label="Quantidade" class="input" v-model="quantidade" data-cy="item-quantity-input"></v-text-field>
+                <v-text-field 
+                  label="Quantidade" 
+                  class="input" 
+                  v-model="quantidade" 
+                  data-cy="item-quantity-input"
+                  placeholder="Ex: 2, 500g, 1kg"
+                ></v-text-field>
             </v-form>
             <v-btn class="btnAddItem" @click="addItem()" data-cy="new-item-button">Adicionar</v-btn>
         </div>

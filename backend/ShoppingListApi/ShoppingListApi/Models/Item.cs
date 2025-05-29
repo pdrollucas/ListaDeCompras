@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShoppingListAPI.Models
 {
@@ -10,7 +10,8 @@ namespace ShoppingListAPI.Models
         [Required, MaxLength(100)]
         public string NomeItem { get; set; }
 
-        public int Quantidade { get; set; } = 1;
+        [Required, MaxLength(50)]
+        public string Quantidade { get; set; } = "1";
 
         public int IdLista { get; set; }
         public Lista Lista { get; set; }
