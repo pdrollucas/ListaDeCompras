@@ -32,7 +32,7 @@
         >
             <span></span>
             <v-btn class="btnSalvar" @click="saveLista()" data-cy="save-list-button">Salvar</v-btn>
-            <img src="../../assets/imgs/shareIcon.svg" alt="Botão de Compartilhar">
+            <img src="../../assets/imgs/shareIcon.svg" alt="Botão de Compartilhar" @click="compartilharNoWhatsApp">
         </div>
     </div>
 </template>
@@ -98,6 +98,26 @@ export default {
       } catch (err) {
         alert('Erro ao remover item: ' + err.message)
       }
+    },
+    async compartilharNoWhatsApp() {
+      const mensagem = `${this.nomeLista}:\n\n${this.itens.map(item => `${item.quantidade} - ${item.nomeItem}`).join(';\n')}`;
+      
+      // Tenta usar a Web Share API primeiro (melhor experiência em dispositivos móveis)
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: this.nomeLista,
+            text: mensagem
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+      
+      // Fallback para WhatsApp Web se Web Share API não estiver disponível
+      const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
+      window.open(urlWhatsApp, '_blank')
     },
     toggleExpandir() {
       this.telaExpandida = !this.telaExpandida
