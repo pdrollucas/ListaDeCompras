@@ -1,6 +1,6 @@
 # ListaDeCompras
 
-**Alunos**: Eduardo Correa, Eduardo Fritz e Pedro Lucas Luckow
+**Alunos**: Eduardo Correa, Eduardo Fritz, Pedro Lucas Luckow e Henrique Schneider 
 
 ## Descrição
 
