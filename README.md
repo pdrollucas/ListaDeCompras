@@ -70,6 +70,7 @@ Sistema Web Mobile para gerenciamento de lista de compras.
 
 # Arquivo documentação
 
-[gerenciador-de-listas-documentacao.pdf](https://github.com/user-attachments/files/19912618/gerenciador-de-listas-documentacao.pdf)
+[documentacao-gerenciador-de-listas.pdf](https://github.com/user-attachments/files/22182579/documentacao-gerenciador-de-listas.pdf)
+
 
 
