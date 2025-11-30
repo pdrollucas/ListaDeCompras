@@ -88,3 +88,9 @@ Para mais informações, consultar o arquivo de documentação:
 
 
 
+# Arquivo documentação
+
+[documentacao-gerenciador-de-listas.pdf](https://github.com/user-attachments/files/22182579/documentacao-gerenciador-de-listas.pdf)
+
+
+
