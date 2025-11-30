@@ -1,70 +1,90 @@
-# ListaDeCompras
+# ListaDeCompras - Gerenciador de Listas
 
-**Alunos**: Eduardo Correa e Pedro Lucas Luckow
+**PAC - Projeto de Aprendizagem Colaborativa Extensionista do Curso de Engenharia de Software da Católica de Santa Catarina**
+
+**Alunos**: Eduardo Correa, Eduardo Fritz e Pedro Lucas Luckow
+
+**Professores orientadores:** Luiz Carlos Camargo e Claudinei Dias
+
+## Justificativa
+
+O desenvolvimento do Gerenciador de Listas se justifica pela necessidade apresentada por um cliente real que buscava uma forma prática de organizar listas para uso doméstico. A ausência de uma solução personalizada motivou a criação de um sistema capaz de atender exatamente às suas demandas. Além disso, o projeto permitiu aplicar tecnologias relevantes do mercado, como Vue.js, C# e MySQL. A proposta também contribuiu para o aprofundamento de conhecimentos em desenvolvimento web e boas práticas de design. Dessa forma, o trabalho une utilidade prática e valor acadêmico.
 
 ## Descrição
 
-Sistema Web Mobile para gerenciamento de lista de compras.
+O Gerenciador de Listas é uma aplicação web mobile desenvolvida para permitir que usuários criem e organizem listas personalizadas contendo itens com nome e quantidade, seja numérica ou em unidades de medida. O sistema inclui funcionalidades de cadastro, login, recuperação de senha via e-mail e gerenciamento completo de listas. Construído com Vue.js no front-end, C# no back-end e MySQL como banco de dados, o sistema oferece uma interface simples, responsiva e focada na usabilidade. Seu objetivo é fornecer uma ferramenta prática para organização doméstica e atender às necessidades específicas de um cliente real.
+
 
 ## Tecnologias Utilizadas
 
 - **Backend**: C#
 - **Frontend**: Vue.js
+- **Banco de dados:**: MySQL
+- **Design**: Figma
 - **Gestão do Projeto**: Trello
 
-## Link para o Design
+## Principais telas desenvolvidas
+<img width="746" height="776" alt="Captura de tela 2025-11-30 180556" src="https://github.com/user-attachments/assets/2c4b44a3-c133-4e87-b343-ffb3966e4ed4" />
+
+
+## Link para o Design completo
 
 - [Figma - Loja de Compras](https://www.figma.com/design/OLKqfrTJXXXY2XhvWcTTrv/Untitled?node-id=0-1&t=LtCk0v5J5SQsCtRT-1)
 
-## Link para o Trello
+<hr/>
 
-- [Trello - Lista de Compras](https://trello.com/invite/b/67cf014db4c64ed9aa35547c/ATTId55f52cd909bb481a9075279310ffbe5A8B62671/listadecompras)
+# Configuração
+## Requisitos para Desenvolvimento
 
-<hr />
+- **Node.js**: versão 20.x ou superior
+- **npm** (ou **yarn/pnpm**) para gerenciamento de pacotes do front-end
+- **.NET SDK** compatível com o backend em C# (ex.: .NET 8.0 ou versão definida no projeto backend)
 
-# Requisitos Funcionais
+## Ambiente de Desenvolvimento
 
-## Autenticação de Usuário
-- O sistema deve permitir que o usuário crie uma conta utilizando e-mail e senha.
-- O sistema deve permitir que o usuário faça login com e-mail e senha.
-- O sistema deve permitir que o usuário redefina sua senha em caso de esquecimento.
-- O sistema deve permitir que o usuário faça logout.
+### 1. Clonar o repositório
 
-## Gerenciamento de Listas de Compras
-- O usuário deve poder criar uma nova lista informando apenas o nome.
-- O usuário deve poder editar o nome de uma lista existente.
-- O usuário deve poder excluir uma lista de compras.
-- O usuário deve poder visualizar todas as suas listas de compras salvas.
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd ListaDeCompras
+```
 
-## Gerenciamento de Itens nas Listas
-- O usuário deve poder adicionar um item a uma lista informando apenas o nome e a quantidade.
-- O usuário deve poder remover um item de uma lista.
-- O usuário deve poder visualizar todos os itens de uma lista de compras específica.
+### 2. Configurar e rodar o Front-end (Vue + Vite)
 
-# Requisitos Não Funcionais
+```bash
+cd front-end
+npm install
+npm run dev
+```
 
-## Usabilidade
-- O sistema deve ter uma interface intuitiva e fácil de usar, com navegação simplificada.
-- O sistema deve permitir a interação sem a necessidade de tutoriais complexos.
+Por padrão, o Vite irá iniciar o servidor de desenvolvimento em algo como `http://localhost:5173` (ou porta exibida no terminal).
 
-## Desempenho
-- O tempo de carregamento das páginas não deve ultrapassar 3 segundos em conexões de internet padrão.
-- As ações do usuário, como adicionar ou remover itens, devem ser refletidas instantaneamente na interface.
+### 3. Configurar e rodar o Backend (C#)
 
-## Segurança
-- As senhas dos usuários devem ser armazenadas de forma segura utilizando técnicas de criptografia.
+Alterar o arquivo appsettings.json.example para appsettings.json e inserir as configurações necessárias do seu banco de dados
 
-## Disponibilidade
-- O sistema deve estar disponível 99% do tempo, garantindo acessibilidade contínua ao usuário.
+Na pasta `backend`, execute o projeto C# (ajuste o comando conforme a estrutura do seu projeto):
 
-## Compatibilidade
-- O sistema deve funcionar corretamente nos principais navegadores modernos (Chrome, Firefox, Edge, Safari).
-- O sistema deve ser otimizado para diferentes tamanhos de tela de smartphones.
-- O sistema não deve funcionar em telas maiores do que as de smartphones
+```bash
+cd ../backend
+dotnet restore
+dotnet run
+```
 
-## Responsividade e Acessibilidade
-- O sistema deve ser responsivo, garantindo uma boa experiência em dispositivos móveis.
+O backend será iniciado na porta configurada no projeto (por exemplo, `http://localhost:5000` ou `http://localhost:8080`).
 
-## Salvamento de Dados
-- O sistema deve salvar automaticamente as listas e seus itens para que o usuário possa acessá-los posteriormente.
+### 4. Fluxo de desenvolvimento sugerido
+
+- Inicie primeiro o backend (`dotnet run`).
+- Em seguida, rode o front-end (`npm run dev`).
+- Acesse o endereço do front-end no navegador.
+
+----
+
+## Documentação
+
+Para mais informações, consultar o arquivo de documentação:
+[documentacao_gerenciador-de-listas.pdf](https://github.com/user-attachments/files/23842598/documentacao_gerenciador-de-listas.pdf)
+
+
 
