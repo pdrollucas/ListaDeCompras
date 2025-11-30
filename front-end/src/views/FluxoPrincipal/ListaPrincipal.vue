@@ -1,0 +1,249 @@
+<template>
+    <div class="device py-10 px-8">
+        <v-snackbar
+            v-model="snackbar.show"
+            :color="snackbar.color"
+            :timeout="4000"
+            location="top"
+        >
+            {{ snackbar.text }}
+        </v-snackbar>
+        <HeaderPrincipal :telaExpandida="telaExpandida">
+            <template #right>
+                <v-icon v-if="telaExpandida" icon @click="toggleExpandir">mdi-arrow-collapse</v-icon>
+            </template>
+        </HeaderPrincipal>
+        <div v-if="!telaExpandida" class="text-center mb-6">
+            <input type="text" v-model="nomeLista" class="inputListName text-center" data-cy="list-name-input">
+            <v-form>
+                <v-text-field label="Item" class="input mt-8" v-model="nomeItem" data-cy="item-name-input"></v-text-field>
+                <v-text-field 
+                  label="Quantidade" 
+                  class="input" 
+                  v-model="quantidade" 
+                  data-cy="item-quantity-input"
+                  placeholder="Ex: 2, 500g, 1kg"
+                ></v-text-field>
+            </v-form>
+            <v-btn class="btnAddItem" @click="addItem()" data-cy="new-item-button">Adicionar</v-btn>
+        </div>
+        <div :class="['itens', telaExpandida ? 'itens-telaExpandida' : '']">
+          <span class="w-100 mt-4 pr-2 expandirBtn">
+            <v-icon v-if="!telaExpandida" @click="toggleExpandir" small>mdi-arrow-expand</v-icon>
+          </span>
+          <div class="py-10">
+            <ul v-for="item in itens" :key="item.idItem">
+                <li class="item py-4 px-4">
+                    <span>{{ item.quantidade }} - {{ item.nomeItem }}</span>
+                    <span @click="removeItem(item.idItem)" data-cy="delete-item-button">x</span>
+                </li>
+            </ul>
+          </div>
+        </div>
+        <div
+            v-if="!telaExpandida"
+            class="w-100 d-flex justify-content-between align-items-center mt-10"
+        >
+            <span></span>
+            <v-btn class="btnSalvar" @click="saveLista()" data-cy="save-list-button">Salvar</v-btn>
+            <img src="../../assets/imgs/shareIcon.svg" alt="Botão de Compartilhar" @click="compartilharNoWhatsApp">
+        </div>
+    </div>
+</template>
+
+<script>
+import HeaderPrincipal from '@/components/HeaderPrincipal.vue'
+import { useUserStore } from '@/stores/user'
+import { updateLista } from '@/services/lista.js'
+import { getItens, addItem, deleteItem } from '@/services/item.js'
+
+export default {
+  components: { HeaderPrincipal },
+  data() {
+    return {
+      nomeLista: 'Digite o nome da lista',
+      idLista: null,
+      itens: [],
+      nomeItem: '',
+      quantidade: '',
+      telaExpandida: false,
+      userStore: useUserStore(),
+      snackbar: {
+        show: false,
+        text: '',
+        color: 'success'
+      }
+    }
+  },
+  async mounted() {
+    this.idLista = this.$route.params.id
+
+    if (!this.userStore.listas.length) {
+        await this.userStore.fetchListas()
+    }
+    try {
+      const lista = this.userStore.listas.find(l => l.idLista == this.idLista)
+      if (!lista) {
+        this.snackbar = {
+          show: true,
+          text: 'Lista não encontrada ou não pertence a você!',
+          color: 'error'
+        }
+        this.$router.push('/home')
+        return
+      }
+      this.nomeLista = lista.nomeLista
+      this.itens = await getItens(this.idLista)
+    } catch (err) {
+      this.snackbar = {
+        show: true,
+        text: err.response?.data || 'Erro ao carregar lista',
+        color: 'error'
+      }
+      this.$router.push('/home')
+    }
+  },
+  methods: {
+    async saveLista() {
+      try {
+        await updateLista(this.idLista, this.nomeLista)
+        await this.userStore.fetchListas()
+        this.snackbar = {
+          show: true,
+          text: 'Lista salva com sucesso!',
+          color: 'success'
+        }
+        this.$router.push('/home')
+      } catch (err) {
+        this.snackbar = {
+          show: true,
+          text: err.response?.data || 'Erro ao salvar lista',
+          color: 'error'
+        }
+      }
+    },
+    async addItem() {
+      if (!this.nomeItem || !this.quantidade) {
+        this.snackbar = {
+          show: true,
+          text: 'Preencha o nome e a quantidade do item',
+          color: 'warning'
+        }
+        return
+      }
+
+      try {
+        await addItem(this.idLista, this.nomeItem, this.quantidade)
+        this.itens = await getItens(this.idLista)
+        this.nomeItem = ''
+        this.quantidade = ''
+        this.snackbar = {
+          show: true,
+          text: 'Item adicionado com sucesso!',
+          color: 'success'
+        }
+      } catch (err) {
+        this.snackbar = {
+          show: true,
+          text: err.response?.data || 'Erro ao adicionar item',
+          color: 'error'
+        }
+      }
+    },
+    async removeItem(idItem) {
+      try {
+        await deleteItem(this.idLista, idItem)
+        this.itens = await getItens(this.idLista)
+        this.snackbar = {
+          show: true,
+          text: 'Item removido com sucesso!',
+          color: 'success'
+        }
+      } catch (err) {
+        this.snackbar = {
+          show: true,
+          text: err.response?.data || 'Erro ao remover item',
+          color: 'error'
+        }
+      }
+    },
+    async compartilharNoWhatsApp() {
+      const mensagem = `${this.nomeLista}:\n\n${this.itens.map(item => `${item.quantidade} - ${item.nomeItem}`).join(';\n')}`;
+      
+      // Tenta usar a Web Share API primeiro (melhor experiência em dispositivos móveis)
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: this.nomeLista,
+            text: mensagem
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+      
+      // Fallback para WhatsApp Web se Web Share API não estiver disponível
+      const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
+      window.open(urlWhatsApp, '_blank')
+    },
+    toggleExpandir() {
+      this.telaExpandida = !this.telaExpandida
+    },
+    goHome() {
+      this.$router.push('/home')
+    }
+  }
+}
+</script>
+
+<style scoped>
+.inputListName {
+    font-size: 20px;
+    font-family: "Roboto", sans-serif !important;
+}
+
+.btnAddItem {
+    width: 50vw;
+    background-color: #79B5EE !important;
+    color: white !important;
+}
+
+.itens {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100dvw;
+    height: 50dvh;
+    overflow-y: auto;
+    background-color: #DEDEDE;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    transition: height 0.3s;
+}
+
+.itens-telaExpandida {
+    height: 80dvh !important;
+}
+
+.item {
+    background-color: #FDFDFD;
+    width: 75dvw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expandirBtn {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  color: gray;
+}
+
+.btnSalvar {
+  width: 50dvw;
+  background-color: #0E8AFF !important;
+  color: white !important;
+}
+</style>

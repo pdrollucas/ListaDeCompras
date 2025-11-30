@@ -1,0 +1,38 @@
+name: SonarCloud Analysis
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install SonarCloud scanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+
+      - name: Build and analyze backend
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:"pdrollucas_ListaDeCompras" /o:"pdrollucas" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="./backend/ShoppingListApi/ShoppingListApi" /d:sonar.tests="./backend/ShoppingListApi/ShoppingListApi.Tests" /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.coverage.exclusions="**/Program.cs,**/Migrations/**,**/*.Designer.cs" /d:sonar.cpd.exclusions="**/Migrations/**" /d:sonar.cs.analyzer.projectOutPaths="." /d:sonar.sourceEncoding="UTF-8" /d:sonar.verbose=true
+          dotnet build ./backend/ShoppingListApi/ShoppingListApi.sln
+          dotnet test ./backend/ShoppingListApi/ShoppingListApi.Tests/ShoppingListApi.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --logger trx
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+

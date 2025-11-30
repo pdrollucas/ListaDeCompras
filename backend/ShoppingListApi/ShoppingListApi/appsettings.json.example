@@ -1,0 +1,21 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=dbname;User=username;Password=yourpassword;"
+  },
+  "Jwt": {
+    "Key": "your-jwt-secret-key-here"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "EmailSettings": {
+    "SmtpServer": "smtp.gmail.com",
+    "Port": 587,
+    "Username": "your-email@gmail.com",
+    "Password": "your-app-specific-password"
+  }
+}

@@ -1,0 +1,28 @@
+## .NET Core
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+## IDE - VS/Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Arquivos de configuração com dados sensíveis
+**/appsettings.json
+**/appsettings.Development.json
+**/appsettings.Production.json
+
+## Arquivos de backup
+*.back
+*~
+*.bak
+
+## Logs
+*.log
+logs/
